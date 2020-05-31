@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'java-app'
-        ansible 'org.jenkinsci.plugins.ansible.AnsibleInstallation'
+        ansible 'ansible'
     }
     stages {
         
