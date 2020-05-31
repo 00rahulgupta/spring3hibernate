@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    tools {
+        maven 'java-app'
+    }
+    stages {
+        
+        stage('fetch code') { //start
+            steps {
+                //tool name: 'java-app', type: 'maven'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/opstree/spring3hibernate.git']]])
+            }
+        } //end
+        
+        stage('build') { //complie code
+            steps {
+                //tool name: 'java-app', type: 'maven'
+                sh label: '', script: '''cp  /var/lib/jenkins/workspace/database.properties_run $WORKSPACE/src/main/resources/database.properties
+                mvn clean package'''
+            }
+        }
+        
+        stage('test') { //start
+            steps {
+                //tool name: 'java-app', type: 'maven'
+                sh 'mvn test'
+            }
+        } //end
+        
+        stage('deploy') { //start
+            steps {
+               // tool name: 'java-app', type: 'maven'
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'java-app-server', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''export app=Downloads/apache-tomcat-8.5.55
+                /bin/bash $HOME/$app/bin/shutdown.sh && /bin/bash  $HOME/$app/bin/startup.sh''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'Downloads/apache-tomcat-8.5.55/webapps', remoteDirectorySDF: false, removePrefix: 'target', sourceFiles: 'target/Spring3HibernateApp.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
+        } //end
+    }
+}
