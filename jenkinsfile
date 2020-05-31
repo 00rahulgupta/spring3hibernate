@@ -8,7 +8,7 @@ pipeline {
         stage('fetch code') { //start
             steps {
                 //tool name: 'java-app', type: 'maven'
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/opstree/spring3hibernate.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '94474a77-e052-482c-9578-de3fda4d03c5', url: 'https://github.com/00rahulgupta/spring3hibernate.git']]])
             }
         } //end
         
