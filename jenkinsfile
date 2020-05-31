@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'java-app'
+        ansible 'org.jenkinsci.plugins.ansible.AnsibleInstallation'
     }
     stages {
         
@@ -34,5 +35,13 @@ pipeline {
                 /bin/bash $HOME/$app/bin/shutdown.sh && /bin/bash  $HOME/$app/bin/startup.sh''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'Downloads/apache-tomcat-8.5.55/webapps', remoteDirectorySDF: false, removePrefix: 'target', sourceFiles: 'target/Spring3HibernateApp.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         } //end
+
+	     stage('ansible') { //start
+            steps {
+               // tool name: 'java-app', type: 'maven'
+		sh 'ansible --version'
+            }
+        } //end
+
     }
 }
